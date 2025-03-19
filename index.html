@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Калькулятор ребалансировки</title>
     <style>
-      /* Основные стили */
       body {
         font-family: Arial, sans-serif;
         margin: 0;
@@ -13,29 +12,13 @@
         background-color: #f5f5f5;
       }
 
-      /* Верхняя полоса с флагом */
-      .header {
-        height: 50px;
-        background-color: #3e8cf0;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-        padding-right: 20px;
-      }
-
-      .header img {
-        height: 30px;
-        cursor: pointer;
-      }
-
-      /* Основной контент */
       .container {
-        margin: 20px;
+        margin: 10px;
       }
 
       .block {
-        margin-bottom: 20px;
-        padding: 15px;
+        margin-bottom: 15px;
+        padding: 10px;
         border: 1px solid #ddd;
         border-radius: 8px;
         background-color: #fff;
@@ -44,42 +27,41 @@
 
       .block h2 {
         margin-top: 0;
-        color: #000; /* Черный цвет текста */
+        color: #000;
       }
 
       .input-row {
         display: flex;
-        align-items: center;
+        flex-direction: column;
         margin-bottom: 10px;
       }
 
       .input-row label {
-        margin-right: 10px;
+        margin-bottom: 5px;
         color: #333;
       }
 
       .input-row input {
-        margin-right: 20px;
         padding: 5px;
         border: 1px solid #ccc;
         border-radius: 4px;
       }
 
       button {
-        margin-top: 10px;
-        padding: 10px 20px;
+        width: 100%;
+        padding: 10px;
         background-color: #3e8cf0;
         color: #fff;
         border: none;
         border-radius: 4px;
         cursor: pointer;
+        margin-top: 10px;
       }
 
       button:hover {
         background-color: #2c6db5;
       }
 
-      /* Стили для всплывающего окна */
       .custom-alert {
         position: fixed;
         top: 50%;
@@ -90,138 +72,101 @@
         border: 1px solid #ccc;
         border-radius: 8px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: left; /* Выравнивание текста по левому краю */
+        text-align: left;
+        width: 90%;
+        max-width: 300px;
       }
 
-      .custom-alert button {
-        margin-top: 10px;
-        padding: 5px 10px;
-        background-color: #3e8cf0;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
+      .info-text {
+        margin-top: 20px;
+        padding: 10px;
+        background-color: #f9f9f9;
+        border-radius: 8px;
+        border: 1px solid #eee;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 1.5;
+        color: #333;
       }
 
-      .custom-alert button:hover {
-        background-color: #2c6db5;
+      .text-block {
+        margin-bottom: 15px;
+      }
+
+      @media (min-width: 600px) {
+        .input-row {
+          flex-direction: row;
+          align-items: center;
+        }
+
+        .input-row label {
+          margin-right: 10px;
+          margin-bottom: 0;
+        }
+
+        .input-row input {
+          margin-right: 20px;
+        }
+
+        button {
+          width: auto;
+          padding: 10px 20px;
+        }
       }
     </style>
   </head>
   <body>
-    <!-- Верхняя полоса с флагом -->
-    <div class="header">
-      <img id="flag" src="russian_flag.png" alt="Флаг" />
-    </div>
-
-    <!-- Основной контент -->
     <div class="container">
-      <!-- Блок "Сумма свободных средств (в рублях)" -->
       <div class="block">
-        <h2 id="cashTitle">Сумма свободных средств (в рублях)</h2>
-        <div class="input-row">
-          <label id="cashLabel">Сумма свободных средств:</label>
-          <input type="number" step="0.01" id="cashAmount" />
-        </div>
-      </div>
-
-      <!-- Блок "Текущая аллокация" -->
-      <div class="block">
-        <h2 id="currentAllocationTitle">Текущая аллокация</h2>
+        <h2>Текущая аллокация</h2>
         <button id="addCurrentAsset">Добавить актив</button>
         <div id="currentAllocation"></div>
       </div>
 
-      <!-- Блок "Целевые пропорции аллокации" -->
       <div class="block">
-        <h2 id="targetAllocationTitle">Целевые пропорции аллокации</h2>
+        <h2>Целевые пропорции аллокации</h2>
         <button id="addTargetAsset">Добавить актив</button>
         <div id="targetAllocation"></div>
       </div>
 
       <button id="calculateRebalance">Посчитать ребалансировку</button>
+
+      <div class="info-text">
+        <div class="text-block">
+          Калькулятор поддерживает расчеты только для акций, облигаций и фондов,
+          торгуемых на Московской бирже в рублях. Рубли (тикер: RUB) также
+          доступны для использования в качестве актива.
+        </div>
+
+        <div class="text-block">
+          Инструменты, не торгуемые на Московской бирже (например, фьючерсы или
+          зарубежные активы), не поддерживаются.
+        </div>
+
+        <div class="text-block">
+          Если вы хотите вывести часть средств и определить, какие активы
+          необходимо продать, введите количество штук по тикеру RUB с
+          отрицательным знаком.
+        </div>
+
+        <div class="text-block">
+          Если хотите положить дополнительные средства, то прибавьте
+          соответствующую сумму по тикеру RUB.
+        </div>
+      </div>
     </div>
 
     <script>
-      // Переменные для хранения текстов на двух языках
-      const texts = {
-        ru: {
-          cashTitle: "Сумма свободных средств (в рублях)",
-          cashLabel: "Сумма свободных средств:",
-          currentAllocationTitle: "Текущая аллокация",
-          targetAllocationTitle: "Целевые пропорции аллокации",
-          addCurrentAsset: "Добавить актив",
-          addTargetAsset: "Добавить актив",
-          calculateRebalance: "Посчитать ребалансировку",
-          errorMessage:
-            "Ошибка: Не удалось достучаться до сервера или получить ответ.",
-          closeButton: "Закрыть",
-        },
-        en: {
-          cashTitle: "Free Funds (in RUB)",
-          cashLabel: "Free Funds:",
-          currentAllocationTitle: "Current Allocation",
-          targetAllocationTitle: "Target Allocation Proportions",
-          addCurrentAsset: "Add Asset",
-          addTargetAsset: "Add Asset",
-          calculateRebalance: "Calculate Rebalance",
-          errorMessage: "Error: Failed to reach the server or get a response.",
-          closeButton: "Close",
-        },
-      };
-
-      // Текущий язык
-      let currentLanguage = "ru";
-
-      // Функция для смены языка
-      function changeLanguage() {
-        currentLanguage = currentLanguage === "ru" ? "en" : "ru";
-        updateTexts();
-      }
-
-      // Функция для обновления текстов на странице
-      function updateTexts() {
-        document.getElementById("cashTitle").textContent =
-          texts[currentLanguage].cashTitle;
-        document.getElementById("cashLabel").textContent =
-          texts[currentLanguage].cashLabel;
-        document.getElementById("currentAllocationTitle").textContent =
-          texts[currentLanguage].currentAllocationTitle;
-        document.getElementById("targetAllocationTitle").textContent =
-          texts[currentLanguage].targetAllocationTitle;
-        document.getElementById("addCurrentAsset").textContent =
-          texts[currentLanguage].addCurrentAsset;
-        document.getElementById("addTargetAsset").textContent =
-          texts[currentLanguage].addTargetAsset;
-        document.getElementById("calculateRebalance").textContent =
-          texts[currentLanguage].calculateRebalance;
-      }
-
-      // Обработчик клика по флагу
-      document.getElementById("flag").addEventListener("click", function () {
-        const flag = document.getElementById("flag");
-        if (flag.src.endsWith("russian_flag.png")) {
-          flag.src = "usa_flag.png";
-        } else {
-          flag.src = "russian_flag.png";
-        }
-        changeLanguage();
-      });
-
-      // Функция для отображения кастомного alert
       function showCustomAlert(message) {
         const alertDiv = document.createElement("div");
         alertDiv.className = "custom-alert";
-        // Заменяем символы новой строки на <br> для корректного отображения
-        const formattedMessage = message.replace(/\n/g, "<br>");
         alertDiv.innerHTML = `
-          <p>${formattedMessage}</p>
-          <button onclick="this.parentElement.remove()">${texts[currentLanguage].closeButton}</button>
+          <p>${message.replace(/\n/g, "<br>")}</p>
+          <button onclick="this.parentElement.remove()">Закрыть</button>
         `;
         document.body.appendChild(alertDiv);
       }
 
-      // Функция для добавления строки ввода актива
       function addAssetInput(containerId, isCurrentAllocation) {
         const container = document.getElementById(containerId);
         const inputRow = document.createElement("div");
@@ -245,64 +190,50 @@
         container.appendChild(inputRow);
       }
 
-      // Обработчики для кнопок "Добавить актив"
       document
         .getElementById("addCurrentAsset")
-        .addEventListener("click", function () {
+        .addEventListener("click", () => {
           addAssetInput("currentAllocation", true);
         });
 
       document
         .getElementById("addTargetAsset")
-        .addEventListener("click", function () {
+        .addEventListener("click", () => {
           addAssetInput("targetAllocation", false);
         });
 
-      // Обработка нажатия кнопки "Посчитать ребалансировку"
       document
         .getElementById("calculateRebalance")
-        .addEventListener("click", function () {
-          let currentAllocation = "";
-          let targetAllocation = "";
-          const cashAmount = parseFloat(
-            document.getElementById("cashAmount").value
-          );
-
-          // Сбор данных из текущей аллокации
-          document
-            .querySelectorAll("#currentAllocation .input-row")
-            .forEach((row) => {
+        .addEventListener("click", () => {
+          const currentAllocation = Array.from(
+            document.querySelectorAll("#currentAllocation .input-row")
+          )
+            .map((row) => {
               const ticker = row.querySelector(".ticker").value;
               const quantity = row.querySelector(".quantity").value;
-              if (ticker && quantity) {
-                currentAllocation += `${ticker}=${quantity};`;
-              }
-            });
-          // Убираем последний символ ';'
-          currentAllocation = currentAllocation.slice(0, -1);
+              return ticker && quantity ? `${ticker}=${quantity}` : null;
+            })
+            .filter(Boolean)
+            .join(";");
 
-          // Сбор данных из целевой аллокации
-          document
-            .querySelectorAll("#targetAllocation .input-row")
-            .forEach((row) => {
+          const targetAllocation = Array.from(
+            document.querySelectorAll("#targetAllocation .input-row")
+          )
+            .map((row) => {
               const ticker = row.querySelector(".ticker").value;
               const percentage = row.querySelector(".percentage").value;
-              if (ticker && percentage) {
-                targetAllocation += `${ticker}=${percentage};`;
-              }
-            });
-          // Убираем последний символ ';'
-          targetAllocation = targetAllocation.slice(0, -1);
+              return ticker && percentage ? `${ticker}=${percentage}` : null;
+            })
+            .filter(Boolean)
+            .join(";");
 
-          // Формирование данных для отправки
           const data = {
             cur_allocation: currentAllocation,
             target_allocation: targetAllocation,
-            cash: cashAmount, // Используем поле cash вместо replenish
+            cash: 0, // По умолчанию 0, если не используется
           };
 
-          // Отправка POST-запроса на сервер
-          fetch("http://185.80.91.96:8080/calc", {
+          fetch("http://45.133.247.62:8080/calc", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -310,17 +241,16 @@
             body: JSON.stringify(data),
           })
             .then((response) => {
-              if (!response.ok) {
-                throw new Error("Ошибка сети или сервера");
-              }
-              return response.json(); // Парсим JSON-ответ
+              if (!response.ok) throw new Error("Ошибка сети или сервера");
+              return response.json();
             })
             .then((data) => {
-              // Извлекаем поле "response" из JSON-объекта
-              showCustomAlert(data.response); // Отображение результата
+              showCustomAlert(data.response);
             })
             .catch((error) => {
-              showCustomAlert(texts[currentLanguage].errorMessage); // Отображение ошибки
+              showCustomAlert(
+                "Ошибка: Не удалось достучаться до сервера или получить ответ."
+              );
               console.error("Ошибка:", error);
             });
         });
