@@ -1,259 +1,1018 @@
 <!DOCTYPE html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Калькулятор ребалансировки</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Портфельный калькулятор</title>
     <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #f5f5f5;
-      }
-
-      .container {
-        margin: 10px;
-      }
-
-      .block {
-        margin-bottom: 15px;
-        padding: 10px;
-        border: 1px solid #ddd;
-        border-radius: 8px;
-        background-color: #fff;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      }
-
-      .block h2 {
-        margin-top: 0;
-        color: #000;
-      }
-
-      .input-row {
-        display: flex;
-        flex-direction: column;
-        margin-bottom: 10px;
-      }
-
-      .input-row label {
-        margin-bottom: 5px;
-        color: #333;
-      }
-
-      .input-row input {
-        padding: 5px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-      }
-
-      button {
-        width: 100%;
-        padding: 10px;
-        background-color: #3e8cf0;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        margin-top: 10px;
-      }
-
-      button:hover {
-        background-color: #2c6db5;
-      }
-
-      .custom-alert {
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background-color: #fff;
-        padding: 20px;
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        text-align: left;
-        width: 90%;
-        max-width: 300px;
-      }
-
-      .info-text {
-        margin-top: 20px;
-        padding: 10px;
-        background-color: #f9f9f9;
-        border-radius: 8px;
-        border: 1px solid #eee;
-        font-size: 14px;
-        font-weight: 500;
-        line-height: 1.5;
-        color: #333;
-      }
-
-      .text-block {
-        margin-bottom: 15px;
-      }
-
-      @media (min-width: 600px) {
-        .input-row {
-          flex-direction: row;
-          align-items: center;
+        /* Общие стили для всех страниц */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
         }
 
-        .input-row label {
-          margin-right: 10px;
-          margin-bottom: 0;
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
         }
 
-        .input-row input {
-          margin-right: 20px;
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
         }
 
-        button {
-          width: auto;
-          padding: 10px 20px;
+        /* Стили для калькулятора */
+        .calc-page {
+            display: block;
         }
-      }
+
+        .upper-block {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 15px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .site-name {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .buttons-container {
+            display: flex;
+            gap: 20px;
+        }
+
+        .buttons-column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .allocation-block {
+            background-color: #fff;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .allocation-title {
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+            color: #2c3e50;
+        }
+
+        .add-asset-btn {
+            padding: 8px 16px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .add-asset-btn:hover {
+            background-color: #2980b9;
+        }
+
+        .assets-list {
+            margin-top: 15px;
+        }
+
+        .asset-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+
+        .asset-label {
+            min-width: 120px;
+        }
+
+        .asset-input {
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            flex-grow: 1;
+        }
+
+        .remove-asset {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .save-btn {
+            background-color: #2ecc71;
+            color: white;
+        }
+
+        .save-btn:hover {
+            background-color: #27ae60;
+        }
+
+        .load-btn {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        .load-btn:hover {
+            background-color: #d35400;
+        }
+
+        .calc-btn {
+            background-color: #9b59b6;
+            color: white;
+        }
+
+        .calc-btn:hover {
+            background-color: #8e44ad;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal {
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+        }
+
+        .modal-title {
+            margin-bottom: 20px;
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        .dev-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .dev-table th, .dev-table td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+
+        .dev-table th {
+            background-color: #f2f2f2;
+            font-weight: bold;
+        }
+
+        .dev-link {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .dev-link:hover {
+            text-decoration: underline;
+        }
+
+        .close-btn {
+            display: block;
+            margin: 0 auto;
+            padding: 8px 20px;
+            background-color: #95a5a6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .close-btn:hover {
+            background-color: #7f8c8d;
+        }
+
+        .output-content {
+            white-space: pre-line;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            overflow-x: auto;
+        }
+
+        /* Стили для страниц авторизации и регистрации */
+        .auth-page {
+            display: none;
+            background-color: #f5f5f5;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .auth-header {
+            margin-bottom: 30px;
+        }
+
+        .site-icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
+            background-color: #eee;
+            border-radius: 50%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+        }
+
+        .site-name {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #777;
+        }
+
+        .login-btn, .signup-btn {
+            width: 100%;
+            padding: 12px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+        }
+
+        .login-btn {
+            background-color: #4a90e2;
+        }
+
+        .login-btn:hover {
+            background-color: #3a7bc8;
+        }
+
+        .signup-btn {
+            background-color: #4CAF50;
+        }
+
+        .signup-btn:hover {
+            background-color: #3e8e41;
+        }
+
+        .register-link, .login-link {
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .register-link a, .login-link a {
+            color: #4a90e2;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .register-link a:hover, .login-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .upper-block {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .buttons-container {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .buttons-column {
+                width: 48%;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .action-buttons button {
+                width: 100%;
+            }
+            
+            .asset-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .asset-input {
+                width: 100%;
+            }
+            
+            .dev-table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
     </style>
-  </head>
-  <body>
-    <div class="container">
-      <div class="block">
-        <h2>Текущая аллокация</h2>
-        <button id="addCurrentAsset">Добавить актив</button>
-        <div id="currentAllocation"></div>
-      </div>
-
-      <div class="block">
-        <h2>Целевые пропорции аллокации</h2>
-        <button id="addTargetAsset">Добавить актив</button>
-        <div id="targetAllocation"></div>
-      </div>
-
-      <button id="calculateRebalance">Посчитать ребалансировку</button>
-
-      <div class="info-text">
-        <div class="text-block">
-          Калькулятор поддерживает расчеты только для акций, облигаций и фондов,
-          торгуемых на Московской бирже в рублях. Рубли (тикер: RUB) также
-          доступны для использования в качестве актива.
+</head>
+<body>
+    <!-- Страница калькулятора -->
+    <div id="calc-page" class="calc-page container">
+        <!-- Верхний блок с лого и кнопками -->
+        <div class="upper-block">
+            <div class="logo">
+                <img src="site_icon.png" class="logo-icon">
+                <div class="site-name">Портфельный калькулятор</div>
+            </div>
+            <div class="buttons-container">
+                <div class="buttons-column">
+                    <button id="login-btn" class="action-btn">Вход</button>
+                    <button id="history-btn" class="action-btn">История</button>
+                </div>
+                <div class="buttons-column">
+                    <button id="developers-btn" class="action-btn">Разработчики</button>
+                </div>
+            </div>
         </div>
 
-        <div class="text-block">
-          Инструменты, не торгуемые на Московской бирже (например, фьючерсы или
-          зарубежные активы), не поддерживаются.
+        <!-- Блок текущей аллокации -->
+        <div class="allocation-block">
+            <h2 class="allocation-title">Текущая аллокация</h2>
+            <button id="add-current-asset" class="add-asset-btn">Добавить актив</button>
+            <div class="assets-list" id="current-assets"></div>
         </div>
 
-        <div class="text-block">
-          Если вы хотите вывести часть средств и определить, какие активы
-          необходимо продать, введите количество штук по тикеру RUB с
-          отрицательным знаком.
+        <!-- Блок целевой аллокации -->
+        <div class="allocation-block">
+            <h2 class="allocation-title">Целевые пропорции аллокации</h2>
+            <button id="add-target-asset" class="add-asset-btn">Добавить актив</button>
+            <div class="assets-list" id="target-assets"></div>
         </div>
 
-        <div class="text-block">
-          Если хотите положить дополнительные средства, то прибавьте
-          соответствующую сумму по тикеру RUB.
+        <!-- Блок кнопок действий -->
+        <div class="action-buttons">
+            <button id="save-btn" class="action-btn save-btn">Сохранить данные</button>
+            <button id="load-btn" class="action-btn load-btn">Загрузить данные</button>
+            <button id="calc-btn" class="action-btn calc-btn">Посчитать ребалансировку</button>
         </div>
-      </div>
+    </div>
+
+    <!-- Страница авторизации -->
+    <div id="signin-page" class="auth-page">
+        <div class="auth-container">
+            <div class="auth-header">
+                <img src="site_icon.png" class="site-icon">
+                <div class="site-name">Портфельный калькулятор</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="signin-email">Почта</label>
+                <div class="input-wrapper">
+                    <input type="email" id="signin-email" placeholder="Введите вашу почту" required>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="signin-password">Пароль</label>
+                <div class="input-wrapper">
+                    <input type="password" id="signin-password" placeholder="Введите ваш пароль" required>
+                    <button class="password-toggle" type="button" onclick="togglePasswordVisibility('signin-password')">👁️</button>
+                </div>
+            </div>
+            
+            <button class="login-btn" onclick="login()">Войти</button>
+            
+            <div class="register-link">
+                Еще не зарегистрированы? <a href="#" onclick="showPage('signup-page')">Зарегистрируйтесь</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Страница регистрации -->
+    <div id="signup-page" class="auth-page">
+        <div class="auth-container">
+            <div class="auth-header">
+                <img src="site_icon.png" class="site-icon">
+                <div class="site-name">Портфельный калькулятор</div>
+            </div>
+            
+            <div class="input-group">
+                <label for="signup-email">Почта</label>
+                <div class="input-wrapper">
+                    <input type="email" id="signup-email" placeholder="Введите вашу почту" required>
+                </div>
+            </div>
+            
+            <div class="input-group">
+                <label for="signup-password">Пароль</label>
+                <div class="input-wrapper">
+                    <input type="password" id="signup-password" placeholder="Придумайте пароль" required>
+                    <button class="password-toggle" type="button" onclick="togglePasswordVisibility('signup-password')">👁️</button>
+                </div>
+            </div>
+            
+            <button class="signup-btn" onclick="signup()">Зарегистрироваться</button>
+            
+            <div class="login-link">
+                Уже есть аккаунт? <a href="#" onclick="showPage('signin-page')">Войдите</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модальные окна -->
+    <div id="developers-modal" class="modal-overlay">
+        <div class="modal">
+            <h2 class="modal-title">Разработчики</h2>
+            <table class="dev-table">
+                <thead>
+                    <tr>
+                        <th>Разработчик</th>
+                        <th>Навыки</th>
+                        <th>Telegram</th>
+                        <th>Портфолио</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ХУЗЗЯТОВ КАМИЛЬ</td>
+                        <td>backend (Golang, sql, docker)</td>
+                        <td><a href="https://t.me/kkhuzzyatov" class="dev-link" target="_blank">@kkhuzzyatov</a></td>
+                        <td><a href="https://github.com/kkhuzzyatov" class="dev-link" target="_blank">github.com/kkhuzzyatov</a></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="close-dev-modal" class="close-btn">Закрыть</button>
+        </div>
+    </div>
+
+    <div id="output-modal" class="modal-overlay">
+        <div class="modal">
+            <h2 class="modal-title" id="output-title">Результат</h2>
+            <div class="output-content" id="output-content"></div>
+            <button id="close-output-modal" class="close-btn">Закрыть</button>
+        </div>
     </div>
 
     <script>
-      function showCustomAlert(message) {
-        const alertDiv = document.createElement("div");
-        alertDiv.className = "custom-alert";
-        alertDiv.innerHTML = `
-          <p>${message.replace(/\n/g, "<br>")}</p>
-          <button onclick="this.parentElement.remove()">Закрыть</button>
-        `;
-        document.body.appendChild(alertDiv);
-      }
+        // Глобальные переменные для хранения данных
+        let currentAssets = [];
+        let targetAssets = [];
+        let userData = {
+            email: '',
+            password: ''
+        };
 
-      function addAssetInput(containerId, isCurrentAllocation) {
-        const container = document.getElementById(containerId);
-        const inputRow = document.createElement("div");
-        inputRow.className = "input-row";
+        // DOM элементы
+        const calcPage = document.getElementById('calc-page');
+        const signinPage = document.getElementById('signin-page');
+        const signupPage = document.getElementById('signup-page');
+        const loginBtn = document.getElementById('login-btn');
+        const historyBtn = document.getElementById('history-btn');
+        const developersBtn = document.getElementById('developers-btn');
+        const addCurrentAssetBtn = document.getElementById('add-current-asset');
+        const addTargetAssetBtn = document.getElementById('add-target-asset');
+        const saveBtn = document.getElementById('save-btn');
+        const loadBtn = document.getElementById('load-btn');
+        const calcBtn = document.getElementById('calc-btn');
+        const currentAssetsContainer = document.getElementById('current-assets');
+        const targetAssetsContainer = document.getElementById('target-assets');
+        const developersModal = document.getElementById('developers-modal');
+        const closeDevModalBtn = document.getElementById('close-dev-modal');
+        const outputModal = document.getElementById('output-modal');
+        const outputTitle = document.getElementById('output-title');
+        const outputContent = document.getElementById('output-content');
+        const closeOutputModalBtn = document.getElementById('close-output-modal');
 
-        const tickerInput = document.createElement("input");
-        tickerInput.type = "text";
-        tickerInput.placeholder = "Тикер";
-        tickerInput.className = "ticker";
-
-        const valueInput = document.createElement("input");
-        valueInput.type = "number";
-        valueInput.step = "0.01";
-        valueInput.placeholder = isCurrentAllocation
-          ? "Количество"
-          : "Доля (%)";
-        valueInput.className = isCurrentAllocation ? "quantity" : "percentage";
-
-        inputRow.appendChild(tickerInput);
-        inputRow.appendChild(valueInput);
-        container.appendChild(inputRow);
-      }
-
-      document
-        .getElementById("addCurrentAsset")
-        .addEventListener("click", () => {
-          addAssetInput("currentAllocation", true);
+        // Инициализация при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            // По умолчанию показываем калькулятор
+            showPage('calc-page');
+            
+            // Добавляем обработчики событий
+            setupEventListeners();
+            
+            // Для демонстрации можно добавить тестовые данные
+            addTestData();
         });
 
-      document
-        .getElementById("addTargetAsset")
-        .addEventListener("click", () => {
-          addAssetInput("targetAllocation", false);
-        });
-
-      document
-        .getElementById("calculateRebalance")
-        .addEventListener("click", () => {
-          const currentAllocation = Array.from(
-            document.querySelectorAll("#currentAllocation .input-row")
-          )
-            .map((row) => {
-              const ticker = row.querySelector(".ticker").value;
-              const quantity = row.querySelector(".quantity").value;
-              return ticker && quantity ? `${ticker}=${quantity}` : null;
-            })
-            .filter(Boolean)
-            .join(";");
-
-          const targetAllocation = Array.from(
-            document.querySelectorAll("#targetAllocation .input-row")
-          )
-            .map((row) => {
-              const ticker = row.querySelector(".ticker").value;
-              const percentage = row.querySelector(".percentage").value;
-              return ticker && percentage ? `${ticker}=${percentage}` : null;
-            })
-            .filter(Boolean)
-            .join(";");
-
-          const data = {
-            cur_allocation: currentAllocation,
-            target_allocation: targetAllocation,
-            cash: 0, // По умолчанию 0, если не используется
-          };
-
-          fetch("http://194.67.205.242:8080/calc", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(data),
-          })
-            .then((response) => {
-              if (!response.ok) throw new Error("Ошибка сети или сервера");
-              return response.json();
-            })
-            .then((data) => {
-              showCustomAlert(data.response);
-            })
-            .catch((error) => {
-              showCustomAlert(
-                "Ошибка: Не удалось достучаться до сервера или получить ответ."
-              );
-              console.error("Ошибка:", error);
+        function setupEventListeners() {
+            // Кнопки верхнего блока
+            loginBtn.addEventListener('click', function() {
+                showPage('signin-page');
             });
-        });
+            
+            historyBtn.addEventListener('click', handleHistory);
+            developersBtn.addEventListener('click', showDevelopersModal);
+            closeDevModalBtn.addEventListener('click', hideDevelopersModal);
+            
+            // Кнопки добавления активов
+            addCurrentAssetBtn.addEventListener('click', function() {
+                addAssetInput(currentAssetsContainer, 'current');
+            });
+            
+            addTargetAssetBtn.addEventListener('click', function() {
+                addAssetInput(targetAssetsContainer, 'target');
+            });
+            
+            // Кнопки действий
+            saveBtn.addEventListener('click', handleSave);
+            loadBtn.addEventListener('click', handleLoad);
+            calcBtn.addEventListener('click', handleCalculate);
+            
+            // Закрытие модального окна результатов
+            closeOutputModalBtn.addEventListener('click', hideOutputModal);
+            
+            // Закрытие модальных окон при клике вне контента
+            developersModal.addEventListener('click', function(e) {
+                if (e.target === developersModal) {
+                    hideDevelopersModal();
+                }
+            });
+            
+            outputModal.addEventListener('click', function(e) {
+                if (e.target === outputModal) {
+                    hideOutputModal();
+                }
+            });
+            
+            // Обработка нажатия Enter на странице авторизации
+            document.getElementById('signin-email').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+            
+            document.getElementById('signin-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    login();
+                }
+            });
+            
+            // Обработка нажатия Enter на странице регистрации
+            document.getElementById('signup-email').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    signup();
+                }
+            });
+            
+            document.getElementById('signup-password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    signup();
+                }
+            });
+        }
+
+        function showPage(pageId) {
+            // Скрываем все страницы
+            calcPage.style.display = 'none';
+            signinPage.style.display = 'none';
+            signupPage.style.display = 'none';
+            
+            // Показываем нужную страницу
+            if (pageId === 'calc-page') {
+                calcPage.style.display = 'block';
+            } else {
+                document.getElementById(pageId).style.display = 'flex';
+            }
+        }
+
+        function addTestData() {
+            // Добавляем тестовые данные для демонстрации
+            if (currentAssetsContainer.children.length === 0) {
+                addAssetInput(currentAssetsContainer, 'current', 'TMOS', '1000');
+                addAssetInput(currentAssetsContainer, 'current', 'SBER', '500');
+                addAssetInput(currentAssetsContainer, 'current', 'RUB', '10000');
+                
+                addAssetInput(targetAssetsContainer, 'target', 'TMOS', '20');
+                addAssetInput(targetAssetsContainer, 'target', 'SBER', '40');
+                addAssetInput(targetAssetsContainer, 'target', 'RUB', '40');
+            }
+        }
+
+        function togglePasswordVisibility(inputId) {
+            const passwordInput = document.getElementById(inputId);
+            const toggleButton = passwordInput.nextElementSibling;
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleButton.textContent = '👁️';
+            } else {
+                passwordInput.type = 'password';
+                toggleButton.textContent = '👁️';
+            }
+        }
+
+        async function login() {
+            const email = document.getElementById('signin-email').value;
+            const password = document.getElementById('signin-password').value;
+            
+            if (!email || !password) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            const data = {
+                email: email,
+                password: password
+            };
+            
+            try {
+                const response = await fetch('http://194.67.205.242:8080/finduser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                
+                if (result === false) {
+                    alert('Пользователь не найден');
+                } else if (result === true) {
+                    // Сохраняем данные пользователя
+                    userData.email = email;
+                    userData.password = password;
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userPassword', password);
+                    
+                    // Переходим на страницу калькулятора
+                    showPage('calc-page');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Не получен ответ от сервера');
+            }
+        }
+
+        async function signup() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            
+            if (!email || !password) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            
+            // Простая валидация email
+            if (!email.includes('@') || !email.includes('.')) {
+                alert('Пожалуйста, введите корректный email');
+                return;
+            }
+            
+            // Проверка сложности пароля
+            if (password.length < 6) {
+                alert('Пароль должен содержать минимум 6 символов');
+                return;
+            }
+            
+            const data = {
+                email: email,
+                password: password
+            };
+            
+            try {
+                const response = await fetch('http://194.67.205.242:8080/createuser', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const result = await response.json();
+                
+                if (result === true) {
+                    // Сохраняем данные пользователя
+                    userData.email = email;
+                    userData.password = password;
+                    localStorage.setItem('userEmail', email);
+                    localStorage.setItem('userPassword', password);
+                    
+                    // Переходим на страницу калькулятора
+                    showPage('calc-page');
+                } else {
+                    alert('Произошла ошибка при регистрации');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Не получен ответ от сервера');
+            }
+        }
+
+        function handleHistory() {
+            if (!userData.email) {
+                alert('Для просмотра истории необходимо войти в систему');
+                showPage('signin-page');
+                return;
+            }
+            
+            showOutputModal('История операций', 'История операций будет доступна после реализации бэкенда.');
+        }
+
+        function showDevelopersModal() {
+            developersModal.style.display = 'flex';
+        }
+
+        function hideDevelopersModal() {
+            developersModal.style.display = 'none';
+        }
+
+        function showOutputModal(title, content) {
+            outputTitle.textContent = title;
+            outputContent.textContent = content;
+            outputModal.style.display = 'flex';
+        }
+
+        function hideOutputModal() {
+            outputModal.style.display = 'none';
+        }
+
+        function addAssetInput(container, type, ticker = '', value = '') {
+            const assetId = Date.now();
+            const assetItem = document.createElement('div');
+            assetItem.className = 'asset-item';
+            assetItem.dataset.id = assetId;
+            
+            assetItem.innerHTML = `
+                <span class="asset-label">Тикер:</span>
+                <input type="text" class="asset-input ticker" value="${ticker}" placeholder="Например: TMOS">
+                <span class="asset-label">${type === 'current' ? 'Количество (штук):' : 'Процент от капитала:'}</span>
+                <input type="number" class="asset-input value" value="${value}" placeholder="${type === 'current' ? '1000' : '20'}">
+                <button class="remove-asset">Удалить</button>
+            `;
+            
+            container.appendChild(assetItem);
+            
+            // Добавляем обработчик для кнопки удаления
+            const removeBtn = assetItem.querySelector('.remove-asset');
+            removeBtn.addEventListener('click', function() {
+                container.removeChild(assetItem);
+                updateAssetsArray(type);
+            });
+            
+            // Добавляем обработчики изменений для инпутов
+            const inputs = assetItem.querySelectorAll('.asset-input');
+            inputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    updateAssetsArray(type);
+                });
+            });
+            
+            // Обновляем массив активов
+            updateAssetsArray(type);
+        }
+
+        function updateAssetsArray(type) {
+            const container = type === 'current' ? currentAssetsContainer : targetAssetsContainer;
+            const assets = [];
+            
+            const assetItems = container.querySelectorAll('.asset-item');
+            assetItems.forEach(item => {
+                const ticker = item.querySelector('.ticker').value.trim();
+                const value = item.querySelector('.value').value.trim();
+                
+                if (ticker && value) {
+                    assets.push({
+                        ticker: ticker,
+                        value: type === 'current' ? parseInt(value) || 0 : parseFloat(value) || 0
+                    });
+                }
+            });
+            
+            if (type === 'current') {
+                currentAssets = assets;
+            } else {
+                targetAssets = assets;
+            }
+            
+            console.log(`${type === 'current' ? 'Текущие' : 'Целевые'} активы:`, assets);
+        }
+
+        function prepareSaveData() {
+            return {
+                email: userData.email || 'example@email.com',
+                password: userData.password || 'password123',
+                cur_allocation: formatAllocation(currentAssets),
+                target_allocation: formatAllocation(targetAssets)
+            };
+        }
+
+        function formatAllocation(assets) {
+            return assets.map(asset => 
+                `${asset.ticker}=${asset.value}`
+            ).join(';');
+        }
+
+        function parseAllocation(str) {
+            return str.split(';').map(item => {
+                const [ticker, value] = item.split('=');
+                return { ticker, value: parseFloat(value) || 0 };
+            });
+        }
+
+        function handleSave() {
+            if (!userData.email) {
+                alert('Для сохранения данных необходимо войти в систему');
+                showPage('signin-page');
+                return;
+            }
+            
+            const data = prepareSaveData();
+            console.log('Отправка данных для сохранения:', data);
+            
+            // В реальном приложении здесь был бы fetch запрос
+            // simulateApiCall('save', data);
+            
+            showOutputModal('Сохранение данных', `Данные успешно сохранены:\n\nEmail: ${data.email}\n\nТекущие активы:\n${data.cur_allocation}\n\nЦелевые активы:\n${data.target_allocation}`);
+        }
+
+        function handleLoad() {
+            if (!userData.email) {
+                alert('Для загрузки данных необходимо войти в систему');
+                showPage('signin-page');
+                return;
+            }
+            
+            const data = prepareSaveData();
+            console.log('Запрос данных для загрузки:', data);
+            
+            // В реальном приложении здесь был бы fetch запрос
+            // simulateApiCall('load', data);
+            
+            // Демонстрационные данные
+            const demoData = {
+                cur_allocation: "TMOS=1000;SBER=500;RUB=10000",
+                target_allocation: "TMOS=20;SBER=40;RUB=40"
+            };
+            
+            // Очищаем текущие активы
+            currentAssetsContainer.innerHTML = '';
+            targetAssetsContainer.innerHTML = '';
+            
+            // Добавляем загруженные данные
+            parseAllocation(demoData.cur_allocation).forEach(asset => {
+                addAssetInput(currentAssetsContainer, 'current', asset.ticker, asset.value);
+            });
+            
+            parseAllocation(demoData.target_allocation).forEach(asset => {
+                addAssetInput(targetAssetsContainer, 'target', asset.ticker, asset.value);
+            });
+            
+            showOutputModal('Загрузка данных', 'Данные успешно загружены с сервера.');
+        }
+
+        function handleCalculate() {
+            if (currentAssets.length === 0 || targetAssets.length === 0) {
+                alert('Добавьте данные о текущих и целевых активах');
+                return;
+            }
+            
+            const data = {
+                cur_allocation: formatAllocation(currentAssets),
+                target_allocation: formatAllocation(targetAssets)
+            };
+            
+            console.log('Отправка данных для расчета:', data);
+            
+            // В реальном приложении здесь был бы fetch запрос
+            // simulateApiCall('calc', data);
+            
+            // Демонстрационный результат
+            const demoResult = `Актуальные данные по вашим активам:\n
+TMOS: Цена: 7.09, Полная стоимость одного лота: 7.09
+SBER: Цена: 325.30, Полная стоимость одного лота: 3253.00
+RUB: Цена: 1.00, Полная стоимость одного лота: 1.00
+
+Совокупная стоимость активов с учётом пополнения: 149807.00 RUB
+Продать 4154 лотов TMOS (4154 штук)
+Купить 9 лотов SBER (90 штук)
+
+Итоговая структура активов:
+TMOS: 12846 (≈60.80%)
+SBER: 180 (≈39.09%)
+RUB: 174.86 (≈0.12%)`;
+            
+            showOutputModal('Результат ребалансировки', demoResult);
+        }
     </script>
-  </body>
+</body>
 </html>
